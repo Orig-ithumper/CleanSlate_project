@@ -1,0 +1,20 @@
+
+@theme {
+  --color-background: #f9fafb;
+  --color-text: #111827;
+  --color-primary: #4338ca;
+  --color-active: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+}
+
+html, body {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: system-ui, sans-serif;
+}
+
+.text-brand   { color: var(--color-primary); }
+.text-success { color: var(--color-active); }
+.text-warning { color: var(--color-warning); }
+.text-error   { color: var(--color-error); }
