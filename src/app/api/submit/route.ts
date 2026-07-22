@@ -51,40 +51,41 @@ export async function POST(req: NextRequest) {
       ]
     );
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
-      },
-    });
+    try {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_APP_PASSWORD,
+        },
+      });
+      await transporter.sendMail({
+        from: process.env.GMAIL_USER,
+        to: process.env.NOTIFY_EMAIL,
+        subject: `New Clean Slate Intake: ${fullName}`,
+        html: `<h2>New Intake Submission</h2>
+          <p><strong>Name:</strong> ${fullName}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Preferred Contact:</strong> ${preferredContact}</p>
+          <p><strong>DOB:</strong> ${dob}</p>
+          <p><strong>Record Type:</strong> ${recordType}</p>
+          <p><strong>Case #:</strong> ${caseNumber}</p>
+          <p><strong>County of Residence:</strong> ${countyOfResidence}</p>
+          <p><strong>County of Filing:</strong> ${countyOfFiling}</p>
+          <p><strong>Year of Incident:</strong> ${yearOfIncident}</p>
+          <p><strong>Completed Probation:</strong> ${completedProbation ? 'Yes' : 'No'}</p>
+          <p><strong>Outstanding Fines:</strong> ${outstandingFines ? 'Yes' : 'No'}</p>
+          <p><strong>On Probation/Parole:</strong> ${onProbation ? 'Yes' : 'No'}</p>
+          <p><strong>Multiple Cases:</strong> ${multipleCases ? 'Yes' : 'No'}</p>`,
+      });
+    } catch (emailErr) {
+      console.error('Email notification failed (non-blocking):', emailErr);
+    }
 
-    await transporter.sendMail({
-      from: process.env.GMAIL_USER,
-      to: process.env.NOTIFY_EMAIL,
-      subject: `New Clean Slate Intake: ${fullName}`,
-      html: `<h2>New Intake Submission</h2>
-        <p><strong>Name:</strong> ${fullName}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Preferred Contact:</strong> ${preferredContact}</p>
-        <p><strong>DOB:</strong> ${dob}</p>
-        <p><strong>Record Type:</strong> ${recordType}</p>
-        <p><strong>Case #:</strong> ${caseNumber}</p>
-        <p><strong>County of Residence:</strong> ${countyOfResidence}</p>
-        <p><strong>County of Filing:</strong> ${countyOfFiling}</p>
-        <p><strong>Year of Incident:</strong> ${yearOfIncident}</p>
-        <p><strong>Completed Probation:</strong> ${completedProbation ? 'Yes' : 'No'}</p>
-        <p><strong>Outstanding Fines:</strong> ${outstandingFines ? 'Yes' : 'No'}</p>
-        <p><strong>On Probation/Parole:</strong> ${onProbation ? 'Yes' : 'No'}</p>
-        <p><strong>Multiple Cases:</strong> ${multipleCases ? 'Yes' : 'No'}</p>
-        <p><strong>Referral Source:</strong> ${referralSource}</p>
-        <p><strong>Description:</strong> ${incidentDescription}</p>`,
-    });
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('[/api/submit] error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (err) {
+    console.error('[/api/submit] error:', err);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
