@@ -4,9 +4,6 @@
 
 @layer base {
   :root {
-    /* your variables */
-  }
-}
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -20,4 +17,6 @@
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
     --accent: 0 0% 96.1%;
-    --accent-foreground: …(truncated)
+    --accent-foreground: 0 0% 9%;
+  }
+}
